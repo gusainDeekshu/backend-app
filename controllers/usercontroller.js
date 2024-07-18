@@ -13,9 +13,17 @@ const loginuser = async (req, res) => {
     if(!user){
       return res.json({ success: false, message: "User does not exist" });
     }
-    // const
-  } catch (error) {
+    const ismatch= await bcrypt.compare(password,user.password);
+    if(!ismatch){
+      return res.json({ success: false, message: "Invalid credentials password" });
+    }
+    const token=createtoken(user._id);
+    res.json({ success: true, token });
     
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: "error in login user" });
+
   }
 };
 const createtoken = (id) => {
